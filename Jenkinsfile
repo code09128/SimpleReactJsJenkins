@@ -62,9 +62,7 @@ pipeline {
     stage('Archive') {
       // 整體 pipeline 執行完後的回呼設定
       steps {
-        success {
-          archiveArtifacts artifacts: 'build/**', fingerprint: true 
-        }
+        archiveArtifacts artifacts: 'dist/**', fingerprint: true // 將構建產物存檔，這裡假設構建產物在 build 目錄下的所有檔案和子目錄
       }
     }
   }
@@ -75,6 +73,14 @@ pipeline {
     }
     failure {
       echo "❌ React build failed!"
+    }
+    always {
+      echo "Cleaning workspace..."
+      // 清理工作區，確保每次構建都是乾淨的環境
+      // 這樣可以避免因為上次構建的殘留檔案或設定影響到這次構建
+      // cleanWs() 是 Jenkins Pipeline 的一個內建函數，用於清理工作區
+      // 它會刪除工作區中的所有檔案和目錄
+      cleanWs()
     }
   }
 }
