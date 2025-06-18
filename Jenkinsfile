@@ -25,6 +25,32 @@ pipeline {
       }
     }
 
+    // 使用 npm run build 執行構建
+    // 這個步驟會根據 package.json 中的 scripts 定義來執行構建命令
+    // 確保在執行這個步驟之前，已經安裝了所有必要的依賴
+    // 如果構建過程中有任何錯誤，這個步驟會失敗，並且 Jenkins 會標記這次構建為失敗
+    // 注意：這裡假設 package.json 中已經定義了 build
+    stage('Build') {
+      steps {
+        sh 'npm run build'
+      }
+    }
+    
+    // 驗證構建是否成功，這裡可以列出構建目錄的內容
+    // 這個步驟可以幫助確認構建是否成功，並且可以在 Jenkins 日誌中查看構建的輸出
+    // 例如，列出 build 目錄下的所有檔案和子目錄
+    // 這樣可以確保構建過程中沒有錯誤，並且所有預期的檔案都已生成
+    // 如果構建失敗，這個步驟也可以幫助診斷問題
+    // 注意：這個步驟不會影響構建的成功或失敗狀態
+    // 這裡使用 ls -R 命令遞迴列出當前目錄下的所有檔案和子目錄
+    // 這樣可以確認構建後的檔案結構是否符合預期
+    // 如果需要更詳細的輸出，可以使用其他命令或腳本來檢查構建結果 
+    stage('Verify')  { 
+      steps {
+        sh 'ls -R .'
+      }
+    }
+
     // 使用 npm test 執行測試
     stage('Run Tests') {
       steps {
@@ -33,12 +59,9 @@ pipeline {
       }
     }
 
-    stage('Build') {
-      steps {
-        sh 'npm run build'
-      }
+    stage('Archive') {
       // 整體 pipeline 執行完後的回呼設定
-      post {
+      steps {
         success {
           archiveArtifacts artifacts: 'build/**', fingerprint: true 
         }
