@@ -1,4 +1,5 @@
 pipeline {
+  // 定義一個 Jenkins Pipeline，這是一個用於自動化構建、測試和部署的腳本
   agent any // 使用任何可用的代理節點
 
   tools {
@@ -64,6 +65,10 @@ pipeline {
       steps {
         archiveArtifacts artifacts: 'dist/**', fingerprint: true // 將構建產物存檔，這裡假設構建產物在 build 目錄下的所有檔案和子目錄
       }
+    }
+
+    stage('run dev') {
+      
     }
   }
 
