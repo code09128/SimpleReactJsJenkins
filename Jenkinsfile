@@ -66,10 +66,6 @@ pipeline {
         archiveArtifacts artifacts: 'dist/**', fingerprint: true // 將構建產物存檔，這裡假設構建產物在 build 目錄下的所有檔案和子目錄
       }
     }
-
-    stage('run dev') {
-      
-    }
   }
 
   post {
